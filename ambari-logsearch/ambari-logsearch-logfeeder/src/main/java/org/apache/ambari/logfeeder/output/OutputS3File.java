@@ -193,16 +193,23 @@ public class OutputS3File extends OutputFile implements RolloverCondition, Rollo
    */
   @Override
   public void write(String block, InputFileMarker inputMarker) throws Exception {
-    if (logSpooler == null) {
-      if (inputMarker.getInput().getClass().isAssignableFrom(InputFile.class)) {
-        InputFile input = (InputFile) inputMarker.getInput();
-        logSpooler = createSpooler(input.getFilePath());
+    if (inputMarker.getInput().getClass().isAssignableFrom(InputFile.class)) {
+      InputFile input = (InputFile) inputMarker.getInput();
+
+      if (logSpooler == null) {
         s3Uploader = createUploader(input.getInputDescriptor().getType());
-        logSpooler.add(block);
-      } else {
-        LOG.error("Cannot write from non local file...");
+        logSpooler = createSpooler(input.getFilePath());
       }
+
+      logSpooler.add(block);
+    } else {
+      LOG.error("Cannot write from non local file...");
     }
+  }
+
+  @Override
+  public void write(Map<String, Object> jsonObj, InputFileMarker inputMarker) throws Exception {
+    write(LogFeederUtil.getGson().toJson(jsonObj), inputMarker);
   }
 
   @VisibleForTesting
