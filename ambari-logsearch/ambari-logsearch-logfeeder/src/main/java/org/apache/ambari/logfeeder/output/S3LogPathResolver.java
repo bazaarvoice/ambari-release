@@ -18,6 +18,9 @@
 
 package org.apache.ambari.logfeeder.output;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import org.apache.ambari.logfeeder.common.LogFeederConstants;
 import org.apache.ambari.logfeeder.util.LogFeederUtil;
 import org.apache.ambari.logfeeder.util.PlaceholderUtil;
@@ -28,6 +31,10 @@ import java.util.HashMap;
  * A utility class that resolves variables like hostname, IP address and cluster name in S3 paths.
  */
 public class S3LogPathResolver {
+   private static final DateTimeFormatter YEAR_FORMATTER = DateTimeFormatter.ofPattern("yyyy");
+   private static final DateTimeFormatter MONTH_FORMATTER = DateTimeFormatter.ofPattern("MM");
+   private static final DateTimeFormatter DAY_FORMATTER = DateTimeFormatter.ofPattern("dd");
+   private static final DateTimeFormatter HOUR_FORMATTER = DateTimeFormatter.ofPattern("HH");
 
   /**
    * Construct a full S3 path by resolving variables in the path name including hostname, IP address
@@ -48,6 +55,13 @@ public class S3LogPathResolver {
     contextParam.put("host", LogFeederUtil.hostName);
     contextParam.put("ip", LogFeederUtil.ipAddress);
     contextParam.put("cluster", cluster);
+
+    OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+    contextParam.put("year", YEAR_FORMATTER.format(now));
+    contextParam.put("month", MONTH_FORMATTER.format(now));
+    contextParam.put("day", DAY_FORMATTER.format(now));
+    contextParam.put("hour", HOUR_FORMATTER.format(now));
+
     return contextParam;
   }
 

@@ -18,6 +18,9 @@
 
 package org.apache.ambari.logfeeder.output;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -45,8 +48,37 @@ public class S3LogPathResolverTest {
   }
 
   @Test
+  public void shouldResolveYear() {
+    String currentYear = OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy"));
+    String resolvedPath = new S3LogPathResolver().getResolvedPath("my_s3_path/$year", "filename.log", "cl1");
+    assertEquals("my_s3_path/" + currentYear + "/filename.log", resolvedPath);
+  }
+
+  @Test
+  public void shouldResolveMonth() {
+    String currentMonth = OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("MM"));
+    String resolvedPath = new S3LogPathResolver().getResolvedPath("my_s3_path/$month", "filename.log", "cl1");
+    assertEquals("my_s3_path/" + currentMonth + "/filename.log", resolvedPath);
+  }
+
+  @Test
+  public void shouldResolveDay() {
+    String currentDay = OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("dd"));
+    String resolvedPath = new S3LogPathResolver().getResolvedPath("my_s3_path/$day", "filename.log", "cl1");
+    assertEquals("my_s3_path/" + currentDay + "/filename.log", resolvedPath);
+  }
+
+  @Test
+  public void shouldResolveHour() {
+    String currentHour = OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("HH"));
+    String resolvedPath = new S3LogPathResolver().getResolvedPath("my_s3_path/$hour", "filename.log", "cl1");
+    assertEquals("my_s3_path/" + currentHour + "/filename.log", resolvedPath);
+  }
+
+  @Test
   public void shouldResolveCombinations() {
-    String resolvedPath = new S3LogPathResolver().getResolvedPath("my_s3_path/$cluster/$host", "filename.log", "cl1");
-    assertEquals("my_s3_path/cl1/"+ LogFeederUtil.hostName + "/filename.log", resolvedPath);
+    String date = OffsetDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy-MM-dd-HH"));
+    String resolvedPath = new S3LogPathResolver().getResolvedPath("my_s3_path/$year-$month-$day-$hour/$cluster/$host", "filename.log", "cl1");
+    assertEquals("my_s3_path/" + date + "/cl1/" + LogFeederUtil.hostName + "/filename.log", resolvedPath);
   }
 }
