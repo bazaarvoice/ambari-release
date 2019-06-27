@@ -9,6 +9,16 @@
       "type":"yarn_apps_stderr",
       "rowtype":"service",
       "path":"/hadoopfs/fs*/yarn/nodemanager/log/*/*/stderr"
+    },
+    {
+      "type":"yarn_apps_task",
+      "rowtype":"service",
+      "path":"/hadoopfs/fs*/hadoop/yarn/log/*/*/syslog"
+    },
+    {
+      "type":"yarn_apps_taskattempt",
+      "rowtype":"service",
+      "path":"/hadoopfs/fs*/hadoop/yarn/log/*/*/syslog_attempt*"
     }
    ],
   "filter":[
@@ -17,14 +27,28 @@
       "conditions":{
         "fields":{
           "type":[
-            "yarn_apps_stdout",
-            "yarn_apps_stderr"
+            "yarn_apps_nm_stdout",
+            "yarn_apps_nm_stderr"
           ]
          }
        },
       "log4j_format":"%d{DATA} %-5p %c{2} (%F:%M(%L)) - %m%n",
       "multiline_pattern":"^(%{DATA:logtime})",
       "message_pattern":"(?m)^%{DATA:logtime}%{SPACE}\\[%{DATA:thread_name}\\]%{SPACE}%{LOGLEVEL:level}%{SPACE}%{JAVACLASS:logger_name}%{SPACE}-%{SPACE}%{GREEDYDATA:log_message}"
-      }
-   ]
+    },
+    {
+      "filter":"grok",
+      "conditions":{
+        "fields":{
+          "type":[
+            "yarn_apps_task",
+            "yarn_apps_taskattempt"
+          ]
+         }
+       },
+      "log4j_format":"%d{TIMESTAMP_ISO8601} %-5p %c{2} (%F:%M(%L)) - %m%n",
+      "multiline_pattern":"^(%{TIMESTAMP_ISO8601:logtime})",
+      "message_pattern":"(?m)^%{TIMESTAMP_ISO8601:logtime}%{SPACE}\\[%{LOGLEVEL:level}\\]%{SPACE}\\[%{JAVACLASS:logger_name}\\]%{SPACE}\\|%{JAVAFILE:file}\\|:%{SPACE}%{GREEDYDATA:log_message}"
+    }
+  ]
 }
