@@ -1,0 +1,30 @@
+{
+  "input":[
+    {
+      "type":"yarn_apps_stdout",
+      "rowtype":"service",
+      "path":"/hadoopfs/fs*/yarn/nodemanager/log/*/*/stdout"
+    },
+    {
+      "type":"yarn_apps_stderr",
+      "rowtype":"service",
+      "path":"/hadoopfs/fs*/yarn/nodemanager/log/*/*/stderr"
+    }
+   ],
+  "filter":[
+    {
+      "filter":"grok",
+      "conditions":{
+        "fields":{
+          "type":[
+            "yarn_apps_stdout",
+            "yarn_apps_stderr"
+          ]
+         }
+       },
+      "log4j_format":"%d{DATA} %-5p %c{2} (%F:%M(%L)) - %m%n",
+      "multiline_pattern":"^(%{DATA:logtime})",
+      "message_pattern":"(?m)^%{DATA:logtime}%{SPACE}\\[%{DATA:thread_name}\\]%{SPACE}%{LOGLEVEL:level}%{SPACE}%{JAVACLASS:logger_name}%{SPACE}-%{SPACE}%{GREEDYDATA:log_message}"
+      }
+   ]
+}
