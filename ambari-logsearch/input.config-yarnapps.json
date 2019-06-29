@@ -1,24 +1,44 @@
 {
   "input":[
     {
-      "type":"yarn_apps_stdout",
+      "type":"yarn_apps_nm_stdout1",
       "rowtype":"service",
       "path":"/hadoopfs/fs*/yarn/nodemanager/log/*/*/stdout"
     },
     {
-      "type":"yarn_apps_stderr",
+      "type":"yarn_apps_nm_stderr1",
       "rowtype":"service",
       "path":"/hadoopfs/fs*/yarn/nodemanager/log/*/*/stderr"
     },
     {
-      "type":"yarn_apps_task",
+      "type":"yarn_apps_nm_stdout2",
+      "rowtype":"service",
+      "path":"/yarn/nodemanager/log/*/*/stdout"
+    },
+    {
+      "type":"yarn_apps_nm_stderr2",
+      "rowtype":"service",
+      "path":"/yarn/nodemanager/log/*/*/stderr"
+    },
+    {
+      "type":"yarn_apps_task1",
       "rowtype":"service",
       "path":"/hadoopfs/fs*/hadoop/yarn/log/*/*/syslog"
     },
     {
-      "type":"yarn_apps_taskattempt",
+      "type":"yarn_apps_taskattempt1",
       "rowtype":"service",
       "path":"/hadoopfs/fs*/hadoop/yarn/log/*/*/syslog_attempt*"
+    },
+    {
+      "type":"yarn_apps_task2",
+      "rowtype":"service",
+      "path":"/hadoop/yarn/log/*/*/syslog"
+    },
+    {
+      "type":"yarn_apps_taskattempt2",
+      "rowtype":"service",
+      "path":"/hadoop/yarn/log/*/*/syslog_attempt*"
     }
    ],
   "filter":[
@@ -27,8 +47,10 @@
       "conditions":{
         "fields":{
           "type":[
-            "yarn_apps_nm_stdout",
-            "yarn_apps_nm_stderr"
+            "yarn_apps_nm_stdout1",
+            "yarn_apps_nm_stderr1",
+            "yarn_apps_nm_stdout2",
+            "yarn_apps_nm_stderr2"
           ]
          }
        },
@@ -41,8 +63,10 @@
       "conditions":{
         "fields":{
           "type":[
-            "yarn_apps_task",
-            "yarn_apps_taskattempt"
+            "yarn_apps_task1",
+            "yarn_apps_task2",
+            "yarn_apps_taskattempt1",
+            "yarn_apps_taskattempt2"
           ]
          }
        },
