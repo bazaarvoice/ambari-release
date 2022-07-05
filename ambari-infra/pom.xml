@@ -25,10 +25,10 @@
 
   <properties>
     <jdk.version>1.8</jdk.version>
-    <solr.version>7.5.0</solr.version>
+    <solr.version>7.7.3</solr.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <python.ver>python &gt;= 2.6</python.ver>
-    <deb.python.ver>python (&gt;= 2.6)</deb.python.ver>
+    <python.ver>python >= 2.6</python.ver>
+    <deb.python.ver>python (>= 2.6)</deb.python.ver>
     <deb.architecture>amd64</deb.architecture>
     <deb.dependency.list>${deb.python.ver}</deb.dependency.list>
     <hadoop.version>3.0.0</hadoop.version>
